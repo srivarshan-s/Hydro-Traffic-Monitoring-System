@@ -297,3 +297,113 @@ void status_control()
         }
     }
 }
+
+int summary_control()
+{
+    int inf = 1;
+    int flag;
+    port_byte_out(0x60, 0x0);
+    while (inf)
+    {
+        uint8_t input = keyboard_key_return();
+        if (input == 0x1) // Esc
+        {
+            port_byte_out(0x60, 0x0);
+            flag = 0;
+            break;
+        }
+        if (input == 0x1c) // Enter key
+        {
+            port_byte_out(0x60, 0x0);
+            flag = 1;
+            break;
+        }
+        if (input == 0x21) // F key
+        {
+            port_byte_out(0x60, 0x0);
+            flag = 2;
+            break;
+        }
+    }
+    return flag;
+}
+
+int get_int()
+{
+    port_byte_out(0x60, 0x0);
+    int start_offset = get_cursor();
+    int start_col = get_offset_col(start_offset);
+    uint8_t key[10] = {0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0x0A, 0x0B};
+    char *val_char[10] = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0"};
+    int val_int[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 0};
+    int ret_val = 0;
+    int inf = 1;
+    int i;
+    while (inf)
+    {
+        uint8_t input = keyboard_key_return();
+        for (i = 0; i < 10; i++)
+        {
+            if (input == key[i]) // 0-9 keys
+            {
+                port_byte_out(0x60, 0x0);
+                print_string(val_char[i]);
+                ret_val = (ret_val * 10) + val_int[i];
+            }
+        }
+        if (input == 0x1C) // ENTER key
+        {
+            port_byte_out(0x60, 0x0);
+            print_nl();
+            return ret_val;
+        }
+        if (input == 0x0E) // Backspace key
+        {
+            port_byte_out(0x60, 0x0);
+            ret_val = ret_val / 10;
+            int offset = get_cursor();
+            int row = get_offset_row(offset);
+            int col = get_offset_col(offset);
+            if (col)
+            {
+                col = col - 1;
+            }
+            int new_offset = get_offset(col, row);
+            if (col == start_col - 1)
+                ;
+            else
+            {
+                set_cursor(new_offset);
+                set_char_at_video_memory(' ', new_offset);
+            }
+        }
+    }
+}
+
+void esc_to_exit()
+{
+    int inf = 1;
+    while (inf)
+    {
+        uint8_t input = keyboard_key_return();
+        if (input == 0x1) // Esc
+        {
+            port_byte_out(0x60, 0x0);
+            break;
+        }
+    }
+}
+
+void enter_to_contn()
+{
+    int inf = 1;
+    while (inf)
+    {
+        uint8_t input = keyboard_key_return();
+        if (input == 0x1C) // Enter Key
+        {
+            port_byte_out(0x60, 0x0);
+            break;
+        }
+    }
+}
