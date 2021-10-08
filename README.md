@@ -1,2 +1,4 @@
 # Hydro-Traffic-Monitoring-System
-Created an operating system from scratch using linux
+Operating system for Hydro Traffic Management. 
+Built from scratch using Linux.
+Emulated using QEMU Emulator
