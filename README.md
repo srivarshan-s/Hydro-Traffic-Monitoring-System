@@ -1,4 +1,3 @@
-# Hydro-Traffic-Monitoring-System
-Operating system for Hydro Traffic Management. <br/>
-Built from scratch using Linux.<br/>
+# MiniOS
+Operating system built from scratch.<br/>
 Emulated using QEMU Emulator
